@@ -79,16 +79,8 @@ class ResearchBuyView(ModelInstanceViewSeoMixin, generic.DetailView, CategoryCon
         context['form'] = self.get_form()
         context["current_category"] = self.object.category
         context["current_category_parent"] = context["current_category"].get_ancestors()[0]
-
         return context
 
-
-    def get_queryset(self):
-        type = self.request.GET.get('type')
-        if type:
-            return Research.objects.filter(category__slug=self.kwargs['slug'], research_type=type)
-        else:
-            return Research.objects.filter(category__slug=self.kwargs['slug'])
     def form_valid(self, form):
         cart = Cart(self.request)
 
@@ -102,27 +94,25 @@ class ResearchBuyView(ModelInstanceViewSeoMixin, generic.DetailView, CategoryCon
             success_message = '<span class="font-weight-bold">"%s"</span>, по цене <span class="text-nowrap font-weight-bold">%s руб.</span><br />' % (cart_item.research.title, cart_item.price)
             messages.add_message(self.request, 50, success_message)
 
-        if self.request.user.is_authenticated:
-            cart = Cart.objects.get(client__user=self.request.user)
-            try:
-                CartItem.objects.get(research=model_instance.research, cart=cart)
-                messages.add_message(self.request, 60, 'Исследование уже в корзине')
-            except:
-                model_instance.cart = Cart.objects.get(client__user=self.request.user)
-                model_instance.save()
-
-                messages.add_message(self.request, 50, success_message)
-        else:
-
-            for item in Cart(self.request):
-                if item.get_product() in CartItem.objects.filter(research=model_instance.research):
-                    messages.add_message(self.request, 60, 'Исследование уже в корзине')
-                    break
-            else:
-                model_instance.save()
-                cart = Cart(self.request)
-                cart.add(model_instance, model_instance.price)
-                messages.add_message(self.request, 50, success_message)
+        # if self.request.user.is_authenticated:
+        #     cart = Cart.objects.get(client__user=self.request.user)
+        #     try:
+        #         CartItem.objects.get(research=model_instance.research, cart=cart)
+        #         messages.add_message(self.request, 60, 'Исследование уже в корзине')
+        #     except:
+        #         model_instance.cart = Cart.objects.get(client__user=self.request.user)
+        #         model_instance.save()
+        #
+        #         messages.add_message(self.request, 50, success_message)
+        # else:
+        #
+        #     for item in Cart(self.request):
+        #         if item.get_product() in CartItem.objects.filter(research=model_instance.research):
+        #             messages.add_message(self.request, 60, 'Исследование уже в корзине')
+        #             break
+        #     else:
+        #         model_instance.save()
+        #         cart = Cart(self.request)
+        #         cart.add(model_instance, model_instance.price)
+        #         messages.add_message(self.request, 50, success_message)
         return HttpResponseRedirect(self.get_success_url())
-
-
