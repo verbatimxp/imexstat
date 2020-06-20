@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load seo %}
+{% block content %}
+{% if messages %}
+{% for message in messages %}
+
+<div class="modal modal-custom fade" id="modal-thanx" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Ваше сообщение отправлено!</div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <p>{{ message }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+
+
+<section class="search search__min">
+    <div class="container-fluid">
+        <form action="{% url 'research:list' %}" , method="get">
+            <div class="row search__row">
+                <input type="text" name="research" class="search__input"
+                       placeholder="Введите код ВЭД, отрасль или тип товара">
+                <button type="submit" class="search__button">Поиск</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+
+<section class="why__title">
+    <div class="container">
+        <div class="row">
+            <div class="section__title">
+                <h2>Какие задачи мы решаем?</h2>
+                <div class="section__title-line"></div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="why">
+    <div class="container">
+        <div class="row why__items">
+            {% for task in tasks %}
+            <div class="why__item">
+                <div class="why__item-top">
+                    <div class="why__item-img">
+                        {% if task.image %}
+                        <img class="why__item-img" src="{{ task.image.url }}" alt="">
+                        {% endif %}
+                    </div>
+                    <div class="why__item-text">
+                        <h2>{{ task.title }}</h2>
+                        <p>{{ task.description|safe }}</p>
+                    </div>
+                </div>
+                <a href="{{ task.url }}" class="why__item-btn">
+                    <p>Узнать больше</p>
+                    <p>&rang;</p>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="products">
+    <div class="container">
+        <div class="row">
+            <div class="section__title">
+                <h2>Продукты</h2>
+                <div class="section__title-line"></div>
+            </div>
+        </div>
+        <div class="row products__items">
+            {% for product in products %}
+
+            <div class="products__item">
+                <div class="products__item-top">
+                    {% if product.image %}
+                    <img class="products__item-top" src="{{ product.image.url }}">
+                    {% endif %}
+                </div>
+                <div class="products__item-text">
+                    <h2>{{ product.title }}</h2>
+                    {% if product.cost %}
+                    <p><span>{{ product.cost }} Р</span></p>
+                    {% else %}
+                    <p><span>Бесплатно</span></p>
+                    {% endif %}
+                </div>
+                <a href="{{ product.url }}" class="products__item-btn">
+                    <p>Узнать больше</p>
+                    <p>&rang;</p>
+                </a>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</section>
+
+        {% if clients_images.count == 0 %}
+<div id="empty_clients"></div>
+        {% else %}
+<section class="partners">
+    <div class="container">
+        <div class="row">
+            <div class="section__title">
+                <h2>Наши клиенты</h2>
+                <div class="section__title-line"></div>
+            </div>
+        </div>
+        <div class="row partners__items">
+            {% for image in clients_images %}
+            <div class="partners__item">
+                {% if image.image %}
+
+                <img class="partners__item" src="{{ image.image.url }}" alt="{{ image.name }}">
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+            {% endif %}
+
+
+<section class="contacts__q">
+    <div class="container">
+        <div class="row">
+            <div class="contacts__text">
+                <h2>Появился вопрос? Или есть предложение?</h2>
+                <p>Оставьте данные для связи в форме ниже и мы обязательно свяжемся с вами в течении 15 минут</p>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+</section>
+
+
+{% endblock %}
+
+{% block footer_form %}
+<div class="row">
+    <div class="footer__form">
+        <form action="" method="post">
+            {% for value in form.errors.values %}
+            {{ value }}
+            {% endfor %}
+            {% csrf_token %}
+            {{form.name}}
+            {{ form.contact_details }}
+            <button id="callback-form-button" disabled type="submit">получить консультацию специалиста</button>
+
+            <p><input id="callback-form-check" onclick="changeButtonForm()" type="checkbox" name="option2" value="a2">согласен
+                на обработку персональных данных</p>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer_class %}{% endblock %}

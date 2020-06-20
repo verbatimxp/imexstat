@@ -1,0 +1,84 @@
+{% load discount %}
+
+<div class="cartBuy__item">
+    {% with research as r %}
+    <div class="cartBuy__item-name">
+        <h5>{{ research.title }}</h5>
+        {% if form.errors %}
+            <p>Заполните, пожалуйста, все данные формы</p>
+        {% endif %}
+    </div>
+
+    {{ form.research }}
+    {% if not r.only_nominal %}
+    <div class="cartBuy__item-settings {{ i }}">
+        <div class="cartBuy__item-settingsLeft">
+            <label class="checkbox-transform">
+                <input {% if form.initial.update_frequency == 'MU' %}checked{% endif %} onchange="showCost()" type="radio"  name="{{ form.update_frequency.html_name }}" id="{{ form.update_frequency.1.id_for_label }}" value="MU" class="checkbox__input {{i}}MU radio_update_frequency">
+                <span class="checkbox__label">Ежемесячное обновление</span>
+            </label>
+            <label class="checkbox-transform">
+                <input {% if form.initial.update_frequency == 'QU' %}checked{% endif %} onchange="showCost()" type="radio" name="{{ form.update_frequency.html_name }}"  id="{{ form.update_frequency.2.id_for_label }}" value="QU" class="checkbox__input {{i}}QU radio_update_frequency">
+                <span class="checkbox__label">Ежеквартальное обновление</span>
+            </label>
+        </div>
+        <div class="cartBuy__item-settingsRight {{ i }}">
+            <div  class="radiobtn OM">
+                <input
+                    {% if form.initial.duration == 'OM' %}checked{% endif %}
+                    onchange="showCost()"
+                    type="radio"
+                    name="{{ form.duration.html_name }}"
+                    id="{{ form.duration.1.id_for_label }}"
+                    value="OM" class="Duration_choice {% if r.M_OM_cost %}MU{% endif %}">
+                <label for="{{ form.duration.1.id_for_label }}">На один месяц</label>
+
+            </div>
+            <div class="radiobtn OQ">
+                <input
+                    {% if form.initial.duration == 'OQ' %}checked{% endif %}
+                    onchange="showCost()"
+                    type="radio" name="{{ form.duration.html_name }}"
+                    id="{{ form.duration.2.id_for_label }}"
+                    value="OQ" class="Duration_choice {% if r.M_OQ_cost %}MU{% endif %} {% if r.Q_OQ_cost %}QU{% endif %}">
+                <label for="{{ form.duration.2.id_for_label }}">На один квартал</label>
+            </div>
+            <div class="radiobtn HY">
+                <input
+                    {% if form.initial.duration == 'HY' %}checked{% endif %}
+                    onchange="showCost()"
+                    type="radio" name="{{ form.duration.html_name }}"
+                    id="{{ form.duration.3.id_for_label }}"
+                    value="HY" class="Duration_choice {% if r.M_HY_cost %}MU{% endif %} {% if r.Q_HY_cost %}QU{% endif %}">
+                <label for="{{ form.duration.3.id_for_label }}">На пол года</label>
+            </div>
+            <div class="radiobtn OY">
+                <input
+                    {% if form.initial.duration == 'OY' %}checked{% endif %}
+                    onchange="showCost()"
+                    type="radio" name="{{ form.duration.html_name }}"
+                    id="{{ form.duration.4.id_for_label }}"
+                    value="OY" class="Duration_choice {% if r.M_OY_cost %}MU{% endif %} {% if r.Q_OY_cost %}QU{% endif %}">
+                <label for="{{ form.duration.4.id_for_label }}">На один год</label>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="cartBuy__item-price">
+        <div class="cartBuy__item-priceBlock">
+            <p class="nominal">{% if r.stock %} <span style="color: red;">{%  discount_cost r.nominal %} Р</span>{% endif %} <span class="{% if r.stock %}is_stock{% endif %}">{{ r.nominal }} Р</span></p>
+            {% if not r.only_nominal %}
+            <p class="OM MU" style="display: none;">{% get_cost r.M_OM_cost %}</p>
+            <p class="OQ MU" style="display: none;">{% get_cost r.M_OQ_cost %}</p>
+            <p class="HY MU" style="display: none;">{% get_cost r.M_HY_cost %}</p>
+            <p class="OY MU" style="display: none;">{% get_cost r.M_OY_cost %}</p>
+{#          <p class="OM QU" style="display: none;">{% if r.Q_OM_cost %}{{ r.Q_OM_cost }} Р{% endif %}</p>#}
+            <p class="OQ QU" style="display: none;">{% get_cost r.Q_OQ_cost %}</p>
+            <p class="HY QU" style="display: none;">{% get_cost r.Q_HY_cost %}</p>
+            <p class="OY QU" style="display: none;">{% get_cost r.Q_OY_cost %}</p>
+            {% endif %}
+            <a href="{% url 'orders:cart_purchase' %}?remove_from_cart={{ research.slug }}">Отменить заказ</a>
+        </div>
+    </div>
+    {% endwith %}
+</div>

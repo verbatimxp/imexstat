@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% load discount %}
+
+{% block content %}
+<section class="cart">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="section__title">
+				<h2>Корзина</h2>
+				<div class="section__title-line"></div>
+			</div>
+		</div>
+		<div class="row cart__items">
+			{% for cartitem in cart %}
+      {% with cartitem.research as research %}
+
+			<div class="cart__item">
+				<div class="cart__item-img">
+					{% if research.image %}
+					<img class="cart__item-img" src="{{ research.image.url }}" alt="">
+					{% endif %}
+				</div>
+				<div class="cart__item-content" style="width: 80%!important;">
+					<div class="cart__item-left">
+						<div>
+							<h2>{{ research.title }}</h2>
+              {% with research as r %}
+                <h2>{% if r.stock %} <span style="color: red;">{%  discount_cost cartitem.price %} Р</span>{% endif %} <span class="{% if r.stock %}is_stock{% endif %}">{{ cartitem.price }} Р</span></h2>
+              {% endwith %}
+						</div>
+						<div class="cart__item-left-text">
+							<p >{{ research.description|safe}}</p>
+						</div>
+						<div class="cart__item-left-bot">
+							<a href="{% url 'orders:cart' %}?remove_from_cart={{ research.slug }}">Убрать из корзины</a>
+						</div>
+					</div>
+          {% if research.extra %}
+            <div class="cart__item-right">
+              <h2>Детали подписки:</h2>
+              <p>{{ research.extra }}</p>
+              {% if research.extra_red %}
+                <p><span>*{{ research.extra_red }}</span></p>
+              {% endif %}
+            </div>
+          {% endif %}
+				</div>
+			</div>
+      {% endwith %}
+
+			{% endfor %}
+		</div>
+		<div class="row cart__buy">
+			<div class="cart__buy-block">
+				{% if  cart.summary == None or cart.summary == 0 %}
+				<div class="cart__buy-top">
+					<p>Ваша корзина пуста.</p>
+				</div>
+				<div class="cart__buy-bot">
+					<a href="{% url 'research:list' %}">Перейти в каталог</a>
+				</div>
+				{% else %}
+				<div class="cart__buy-top">
+					<p>Итого:</p>	
+					<h2>{{ cart.summary }} Р</h2>
+				</div>
+				<div class="cart__buy-bot">
+					<a href="{% url 'orders:cart_purchase' %}">Оформить покупку</a>
+				</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>	
+</section>
+{% endblock content %}

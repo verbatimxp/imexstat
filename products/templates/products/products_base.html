@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+{% block content %}
+<style>
+
+.current-category-slug {
+    color: #000000;
+}
+
+.current-category-slug:hover{
+    color: #FFED00;
+    text-decoration: none;
+}
+
+</style>
+<section class="search search__min">
+	<div class="container-fluid">
+		<form action="{% url 'research:list' %}", method="get">
+			<div class="row search__row">
+				<input type="text" name="research" class="search__input" placeholder="Введите код ВЭД, отрасль или тип товара">
+				<button type="submit" class="search__button">Поиск</button>
+			</div>
+		</form>
+	</div>
+</section>
+{% if messages %}
+
+{% for message in messages %}
+
+<div class="modal modal-custom fade" id="modal-thanx" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            {% if message.level == 50 %}
+                <div class="modal-header">
+                    <div class="modal-title">Товар добавлен в корзину</div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>Вы добавили к заказу оформление документа {{ message|safe }}
+                    Вы можете оплатить выбранные услуги или добавить к заказу оформление других документов.</p>
+                </div>
+
+                <div class="modal-footer d-flex flex-wrap justify-content-between">
+                    <button class="btn btn-secondary btn-custom" type="button" data-dismiss="modal">Заказать ещё</button>
+                    <a class="btn btn-inverse btn-custom" href="{% url 'orders:cart' %}">В корзину</a>
+                </div>
+            {% elif message.level == 60 %}
+                <div class="modal-header">
+                    <div class="modal-title">Товар не был добавлен в корзину</div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <p>{{ message }}</p>
+                </div>
+            {% elif message.level == 70 %}
+                <div class="modal-header">
+                    <div class="modal-title">Товар добавлен в избранное</div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <p>{{ message }}</p>
+                </div>
+            {% elif message.level == 80 %}
+                <div class="modal-header">
+                    <div class="modal-title">Товар не был добавлен в избранное</div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <p>{{ message }}</p>
+                </div>
+            {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                <div class="modal-header">
+                    <div class="modal-title">Вы не вошли в свой аккаунт</div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <p>{{ message }}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+{% endfor %}
+{% endif %}
+<section class="ready">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="content__container">
+				<div class="content__menu">
+          <div class="list-group">
+            {% recursetree categories %}
+                  <a href="{% url 'research:category' node.slug %}{% if request.GET.type %}?type={{ request.GET.type }}{% endif %}"
+                     class="list-group-item list-group-item-action
+                     {% if node.get_children %} list-group-item_category {% endif %}
+                     {% for child in node.get_children %}
+                     {% if child.slug == view.kwargs.slug %} active {% endif %}
+                     {% endfor %}
+                     {% if node.slug == view.kwargs.slug %}list-group-item_current{% endif %}">{{ node.title }}</a>
+              {% if not node.is_leaf_node %}
+                  <div class="list-group__dropdown">
+                      {{ children }}
+                  </div>
+              {% endif %}
+
+            {% endrecursetree %}
+					</div>
+				</div>
+				<div class="content__main">
+                    {% if current_category.slug %}
+                    <p class="bread_crumbles" > <a href="/research/list/" class="current-category-slug"> {{ current_category_parent.title }} </a> - <a href="{% url 'research:category' current_category.slug %}" class="current-category-slug">{{ current_category.title }}</a> {% if research %}- <a href=""  class="current-category-slug">{{ research.title }}{% endif %}</a></p>
+                    {% else %}
+
+                    {% endif %}
+					<div class="ready__type">
+						<a href="{{ request.path }}?type=industry" id="industry" class="ready__type-item ">Отраслевые</a>
+						<a href="{{ request.path }}?type=export" id="export" class="ready__type-item ready__type-item__middle">Экспорт</a>
+						<a href="{{ request.path }}?type=import" id="import" class="ready__type-item">Импорт</a>
+					</div>
+
+					{% block inner_content %}
+
+					{% endblock inner_content %}
+
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+{% endblock content %}

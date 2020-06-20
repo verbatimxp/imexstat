@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<section class="contacts">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="section__title">
+				<h2>Контакты</h2>
+				<div class="section__title-line"></div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="contacts__top">
+				<div class="contacts__top-item">
+					<div class="contacts__top-item-left">
+						<p>Телефон: </p>
+					</div>
+					<div class="contacts__top-item-right">
+            {% for phone in contacts.phones.all %}
+              <a href="tel:{{ phone.number_link }}">{{ phone.number }}</a>
+            {% endfor %}
+
+					</div>
+				</div>
+				<div class="contacts__top-item">
+					<div class="contacts__top-item-left">
+						<p>Факс: </p>
+					</div>
+					<div class="contacts__top-item-right">
+						<a href="tel:{{ contacts.fax_link }}">+7 (913) 903 56 16</a>
+					</div>
+				</div>
+				<div class="contacts__top-item">
+					<div class="contacts__top-item-left">
+						<p>E-mail: </p>
+					</div>
+					<div class="contacts__top-item-right">
+						<a href="mailto:{{ contacts.email }}">{{ contacts.email }}</a>
+					</div>
+				</div>
+			</div>
+			<div class="contacts__top">
+				<div class="contacts__top-item">
+					<div class="contacts__top-item-left">
+						<p>ИНН: </p>
+					</div>
+					<div class="contacts__top-item-right">
+						<a>{{ contacts.INN }}</a>
+					</div>
+				</div>
+				<div class="contacts__top-item">
+					<div class="contacts__top-item-left">
+						<p>ОГРН: </p>
+					</div>
+					<div class="contacts__top-item-right">
+						<a>{{ contacts.OGRN }}</a>
+					</div>
+				</div>
+				<div class="contacts__top-item">
+					<div class="contacts__top-item-left">
+						<p>КПП: </p>
+					</div>
+					<div class="contacts__top-item-right">
+						<a>{{ contacts.KPP }}</a>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<div class="row">
+      {% for office in contacts.offices.all %}
+        <div class="contacts__address-item">
+          <div class="contacts__address-top">
+            <h3>{{ office.name }}</h3>
+            <p>{{ office.address }}</p>
+          </div>
+          <div class="contacts__address-bot">
+            <div class="contacts__map">
+{#              <iframe src="https://yandex.ru/map-widget/v1/-/CCcpV-5m" width="100%" height="100%" frameborder="0" allowfullscreen="true"></iframe>#}
+              <iframe src="{{ office.map_link }}" width="100%" height="100%" frameborder="0" allowfullscreen="true"></iframe>
+            </div>
+            <div class="contacts__img">
+              <div class="contacts__img-top">
+                {% for item in office.images.all|slice:":2" %}
+                    {% if item.img %}
+                      <img class="contacts__img-top-item" src="{{ item.img.url }}" alt="">
+                    {% endif %}
+                {% endfor %}
+              </div>
+
+              <div class="contacts__img-bot">
+                {% for item in office.images.all|slice:"2:" %}
+                  {% if item.img %}
+                    <img class="contacts__img-bot-item" src="{{ item.img.url }}" alt="">
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+		</div>
+	</div>
+</section>
+
+
+<section class="team">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="section__title">
+				<h2>Наша команда</h2>
+				<div class="section__title-line"></div>
+			</div>
+		</div>
+		<div class="row team__items">
+      {% for member in contacts.team_members.all %}
+        <div class="team__item">
+          <div class="team__item-top">
+            <div class="team__item-avatar">
+              <img class="team__item-avatar" src="{{ member.img.url }}" alt="">
+            </div>
+            <div class="team__item-bio">
+              <h2>{{ member.name }}</h2>
+              <p>{{ member.job }}</p>
+            </div>
+          </div>
+          <div class="team__item-text">
+            <p>{{ member.description }}</p>
+          </div>
+        </div>
+      {% endfor %}
+
+		</div>
+	</div>
+</section>
+{% endblock content %}

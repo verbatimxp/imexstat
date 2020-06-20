@@ -1,0 +1,50 @@
+{% extends 'products/products_base.html' %}
+
+
+{% block title %}Каталог исследований{% endblock title %}
+
+{% load discount %}
+{% load static %}
+
+{% block inner_content %}
+
+<div itemscope itemtype="https://schema.org/NewsArticle" class="ready__items">
+    {% for research in researchs %}
+    <div class="ready__item">
+        <div itemprop="associatedMedia" class="ready__item-img">
+        {% if research.image %}
+            <a href="{% url 'research:buy' research.slug %}"><img class="ready__item-img" src="{{ research.image.url }}" alt=""></a>
+        {% endif %}
+        </div> 
+        <div class="ready__item-right">
+            <div class="ready__item-top">
+                <div class="ready__item-topLeft">
+                    <div class="ready__item-topLeftRow">
+                        <a href="{% url 'research:buy' research.slug %}"><h2 itemprop="headline">{{ research.title}}</h2></a>
+                        <div class="ready__item-stars"></div>
+                        {% with research as r %}
+                          <h2><span class="icon-ruble">{% if r.stock %} <span style="color: red;">{%  discount_cost r.nominal %}Р </span>{% endif %}<span class="{% if r.stock %}is_stock{% endif %}">{{ r.nominal }}</span></span></h2>
+                        {% endwith %}
+                    </div>
+                    <p id="research_description" itemprop="description">{{ research.description|safe }}</p>
+                    <a href="{% url 'research:buy' research.slug %}">Подробнее...</a>
+                </div>
+                {% if research.extra or research.extra_red %}
+                <div class="ready__item-topRight">
+                    <h2>Дополнительно:</h2>
+                    <p>{{ research.extra }}</p>
+                    <p><span>{{ research.extra_red }}</span></p>
+                </div>
+                {% else %}
+                {% endif %}
+            </div>
+            <div class="ready__item-bottom">
+                <a href="{% url 'research:list' %}?add_to_cart={{ research.slug }}">Добавить в корзину</a>
+                <a href="{% url 'research:buy' research.slug %}">Купить</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock inner_content %}

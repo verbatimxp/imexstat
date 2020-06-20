@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+    .fileform {
+        box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.15);
+        box-sizing: border-box;
+        background-color: #FFFFFF;
+        border: 1px solid #000000;
+        cursor: pointer;
+        height: 40px;
+        overflow: hidden;
+        padding: 2px;
+        position: relative;
+        text-align: left;
+        vertical-align: middle;
+        width: 350px;
+        margin-bottom: 13%;
+    }
+
+    .fileform #fileformlabel {
+        background-color: #FFFFFF;
+        float: left;
+        height: 28px;
+        line-height: 22px;
+        overflow: hidden;
+        padding: 2px;
+        text-align: left;
+        vertical-align: middle;
+        width: 210px;
+    }
+
+    .fileform .selectbutton {
+        background-color: #FFED00;
+        border: 1px solid #939494;
+        border-radius: 2px;
+        color: black;
+        float: right;
+        font-size: 16px;
+        height: 30px;
+        overflow: hidden;
+        padding: 4px 6px;
+        margin-top: 2px;
+        text-align: center;
+        vertical-align: middle;
+        width: 110px;
+    }
+
+
+    .fileform #id_requisites_file {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        -moz-opacity: 0;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        font-size: 150px;
+        height: 30px;
+        z-index: 20;
+    }
+</style>
+
+
+<script>
+
+    function getName(str) {
+        if (str.lastIndexOf('\\')) {
+            var i = str.lastIndexOf('\\') + 1;
+        } else {
+            var i = str.lastIndexOf('/') + 1;
+        }
+        var filename = str.slice(i);
+        var uploaded = document.getElementById("fileformlabel");
+        uploaded.innerHTML = filename;
+    }
+</script>
+
+<form method="post">
+    <div id="cartBuy">
+        <section class="cartBuy__bio">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="section__title">
+                        <h2>Оформление заказа</h2>
+                        <div class="section__title-line"></div>
+                    </div>
+                </div>
+                <div class="row cartBuy__bio-types">
+                    <div class="cartBuy__bio-type">
+                        <label class="checkbox-transform">
+                            <input type="radio" name="bio" class="checkbox__input" checked
+                                   onchange="cartBuy('fizbioform','urbioform');">
+                            <span class="checkbox__label">Физическое лицо</span>
+                        </label>
+                    </div>
+                    <div class="cartBuy__bio-type">
+                        <label class="checkbox-transform">
+                            <input type="radio" name="bio" class="checkbox__input"
+                                   onchange="cartBuy('urbioform','fizbioform');">
+                            <span class="checkbox__label">Юридическое лицо</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="row cartBuy__bio-forms" id="fizbioform">
+                    <div class="cartBuy__bio-formItem">
+                        <p>Как вас зовут?</p>
+                        <p>*Имя</p>
+                        {{ forms.individual_form.firstname }}
+                    </div>
+                    <div class="cartBuy__bio-formItem" style="margin-top: 3%!important;">
+                        <p>Фамилия</p>
+                        {{ forms.individual_form.lastname }}
+                    </div>
+                    <div class="cartBuy__bio-formItem" style="margin-top: 1%!important;">
+                        <p>Отчество</p>
+                        {{ forms.individual_form.middle_name }}
+                    </div>
+                    <div class="cartBuy__bio-formItem" style="margin-top: 1%!important;">
+                        <!--						<p>Контактные данные:</p>-->
+                        <p>*Почта</p>
+                        {{ forms.individual_form.email }}
+                    </div>
+                    <div class="cartBuy__bio-formItem" style="margin-top: 1%!important;">
+                        <p>*Телефон (+79670841726)</p>
+                        {% if forms.individual_form.phone.errors %}
+                        <p class="settings_form_error">Введите действительный номер телефона</p>
+                        {% endif %}
+
+                        {{ forms.individual_form.phone }}
+
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="row cartBuy__bio-forms" id="urbioform">
+                    <div class="cartBuy__bio-formItem" style="width:100%;">
+                        <div class="row">
+                            <div class="cartBuy__bio-formItem cartBuy__bio-formItemBot" style="width: 30%;">
+                                <p>Название фирмы</p>
+                                {{forms.entity_form.firm_name}}
+                            </div>
+                            <div class="cartBuy__bio-formItem cartBuy__bio-formItemBot"
+                                 style="width: 63%;">
+                                <p>Юридический адрес</p>
+                                {{forms.entity_form.legal_adress}}
+                            </div>
+                            <div class="cartBuy__bio-formItem cartBuy__bio-formItemBot" style="width: 30%;">
+                                <p>ИНН</p>
+                                {{ forms.entity_form.INN }}
+                            </div>
+                            <div class="cartBuy__bio-formItem cartBuy__bio-formItemBot" style="width: 30%">
+                                <p>КПП</p>
+                                {{ forms.entity_form.KPP }}
+                            </div>
+                            <div class="">
+                                <p>Реквизиты</p>
+                                <div class="fileform">
+                                    <div id="fileformlabel"></div>
+                                    <div class="selectbutton" style="font-weight: bold">Загрузить</div>
+                                    <input type="file" name="requisites_file" id="id_requisites_file"
+                                           onchange="getName(this.value);"/>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="cartBuy__list inn__point">
+            <div class="container-fluid">
+                <div class="row">
+                    <h3>Перечень покупок</h3>
+                </div>
+                <div class="row cartBuy__items">
+                    {{ cart.management_form }}
+                    {% csrf_token %}
+                    {# {% if user.is_authenticated %}#}
+                    {% for form, research in formset %}
+                    {% with research.research as research %}
+                    {% with research.id as i %}
+                    {% include 'orders/formset.html' %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endfor %}
+                    {# {% else %}#}
+                    {# {% for form, item in formset %}#}
+                    {# {% with item.research as research %}#}
+                    {# {% with research.id as i %}#}
+                    {# {% include 'orders/formset.html' %}#}
+                    {# {% endwith %}#}
+                    {# {% endwith %}#}
+                    {# {% endfor %}#}
+                    {# {% endif %}#}
+                </div>
+            </div>
+        </section>
+        <section class="cartBuy__pay inn__point">
+            <div class="container-fluid">
+                <div class="row cartBuy__pay-row">
+                    <div class="cartBuy__pay-button">
+                        <input type="submit" value="Оплатить">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</form>
+{% endblock content %}

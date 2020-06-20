@@ -1,0 +1,216 @@
+{% extends "personal_cabinet/pk_base.html" %}
+
+{% load static %}
+{% block inner_content %}
+{% if user.is_authenticated %}
+<section class="lk__profile">
+	<form method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+		<div class="container-fluid">
+			<div class="row">
+				<div class="section__title">
+					<h2>Ваш профиль</h2>
+					<div class="section__title-line"></div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="lk__profile-data">
+					<div class="lk__data-top">
+						<p>Заполните ваш профиль</p>
+					</div>
+					<div class="lk__data-mid">
+						<div class="lk__data-items">
+							{% if forms.profile_form.errors or forms.requizites_form.errors %}
+								<p class="settings_form_error">В введенных данных содержится ошибка</p>
+							{% endif %}
+							{% with forms.profile_form as form %}							    
+							<div class="lk__data-item">
+								<p>Ваша фамилия</p>
+								{% for error in form.lastname.errors %}
+									<p class="settings_form_error">
+										{{ error }}
+									</p>
+								{% endfor %}
+								{{ form.lastname }}
+							</div>
+							<div class="lk__data-item">
+								<p>Ваше имя</p>
+								{% for error in form.firstname.errors %}
+									<p class="settings_form_error">
+										{{ error }}
+									</p>
+								{% endfor %}
+								{{ form.firstname }}
+							</div>
+							<div class="lk__data-item">
+								<p>Ваше отчество</p>
+								{% for error in form.middle_name.errors %}
+									<p class="settings_form_error">
+										{{ error }}
+									</p>
+								{% endfor %}
+								{{ form.middle_name }}
+							</div>
+						</div>
+						<div class="lk__data-button lk__data-buttonDesktop">
+							<button>Сохранить данные</button>
+						</div>
+					</div>
+					<div class="lk__data-bot">
+						<div class="lk__data-item">
+							<p>E-mail</p>			
+							{% for error in form.email.errors %}
+								<p class="settings_form_error">
+									{{ error }}
+								</p>
+							{% endfor %}
+							{{ form.email.as_text }}
+						</div>
+						<div class="lk__data-item">
+							<p>Телефон</p>
+							{% if form.phone.errors %}
+								<p class="settings_form_error">Введите действительный номер телефона</p>
+								<p class="settings_form_error">Например: +72125552368</p>
+							{% endif %}
+							{{ form.phone.as_text }}
+						</div>
+							{% endwith %}
+						<div class="lk__data-button lk__data-buttonMobile">
+							<button>Сохранить данные</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+	<section class="lk__social">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="section__title">
+					<h2>Социальные сети</h2>
+					<div class="section__title-line"></div>
+				</div>
+			</div>
+			<div class="row">
+				<p class="lk__social-miniTitle">Подключите аккаунт социальной сети для быстрого входа на наш сайт</p>
+			</div>
+			<div class="row">
+				<div class="lk__social-items">
+					<div class="lk__social-item">
+						<img src="{% static "img/lk__facebook.svg" %}" alt="">
+						<a href="">Подключить</a>
+					</div>
+					<div class="lk__social-item">
+						<img src="{% static "img/lk__twitter.svg" %}" alt="">
+						<a href="">Подключить</a>
+					</div>
+				</div>
+				<div class="lk__social-items">
+					<div class="lk__social-item">
+						<img src="{% static "img/lk__vk.svg" %}" alt="">
+						<a href="">Подключить</a>
+					</div>
+					<div class="lk__social-item">
+						<img src="{% static "img/lk__instagram.svg" %}" alt="">
+						<a href="">Подключить</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+	<section class="lk__rekvz">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="section__title">
+					<h2>Реквизиты Юр. Лица</h2>
+					<div class="section__title-line"></div>
+				</div>
+			</div>
+			<div class="row">
+				<p class="lk__social-miniTitle">Тут тоже нужно описание или обьяснение для чего это </p>
+			</div>
+			<div class="row">
+				<div class="lk__profile-data">
+					<div class="lk__data-top">
+						<p>Заполните ваш профиль</p>
+					</div>
+					<div class="lk__data-mid">
+						<div class="lk__data-items">
+							{% with forms.requizites_form as form %}
+							    
+							<div class="lk__data-item">
+								<p>Название фирмы</p>
+								{% for error in form.firm_name.errors %}
+									<p class="settings_form_error">
+										{{ error }}
+									</p>
+								{% endfor %}
+								{{ form.firm_name }}
+							</div>
+							<div class="lk__data-item lk__data-itemLong">
+								<p>Юридический адрес</p>
+								{% for error in form.legal_adress.errors %}
+									<p class="settings_form_error">
+										{{ error }}
+									</p>
+								{% endfor %}
+								{{ form.legal_adress }}
+							</div>
+						</div>
+						<div class="lk__data-button lk__data-buttonDesktop">
+							<button>Сохранить данные</button>
+						</div>
+					</div>
+					<div class="lk__data-bot lk__data-botLong">
+						<div class="lk__data-item">
+							<p>ИНН</p>
+							{% for error in form.INN.errors %}
+								<p class="settings_form_error">
+									{{ error }}
+								</p>
+							{% endfor %}
+							{{ form.INN.as_text }}
+						</div>
+						<div class="lk__data-item lk__data-itemSecond">
+							<p>КПП</p>
+							{% for error in form.KPP.errors %}
+								<p class="settings_form_error">
+									{{ error }}
+								</p>
+							{% endfor %}
+							{{ form.KPP.as_text }}
+						</div>
+						<div class="lk__data-item lk__data-item-file">
+							<p>Файл с реквезитами</p>
+							<div class="lk__data-file">
+								{% if client.requisites_file %}
+									{{ client.requisites_file.name }}
+								{% else %}
+								<p>Прикрепите файл</p>
+
+								{% endif %}
+								
+								<div id="settings_form_file">
+									{{ form.requisites_file }}
+								</div>
+								<label for="id_requisites_file">+</label>
+
+							</div>
+							{% endwith %}
+							<div class="lk__data-button lk__data-buttonMobile">
+								<button>Сохранить данные</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</section>
+{% endif %}
+{% endblock inner_content %}
