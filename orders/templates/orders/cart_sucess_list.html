@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% load discount %}
+
+{% block content %}
+<section class="cart">
+	<div class="container-fluid">
+		<div class="row">
+                <div class="col-6 section__title">
+				<h2>Ваш заказ успешно оформлен</h2>
+                </div>
+                <div class="col-6">
+                    <img src="http://otherspace.ru/img/galka.png" width="100px" style="margin-top: -4%">
+                </div>
+                            <a href="{% url 'research:list' %}" class="header__top-login" style="margin-top: 5%">Перейти к списку продуктов</a>
+
+			</div>
+		</div>
+	</div>	
+
+</section>
+
+
+    
+{% endblock content %}

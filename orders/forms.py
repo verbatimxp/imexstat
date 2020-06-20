@@ -13,12 +13,12 @@ class IndividualForm(forms.Form):
 
 
 class EntityForm(forms.Form):
-    firm_name = forms.CharField(max_length=50, required=True)
-    email = forms.EmailField(required=True)
-    phone = PhoneNumberField(required=True)
-    INN = forms.IntegerField(required=True)
-    KPP = forms.IntegerField(required=True)
-    legal_adress = forms.CharField(required=True)
+    firm_name = forms.CharField(max_length=50, required=False)
+    email = forms.EmailField(required=False)
+    phone = PhoneNumberField(required=False)
+    INN = forms.IntegerField(required=False)
+    KPP = forms.IntegerField(required=False)
+    legal_adress = forms.CharField(required=False)
     requisites_file = forms.FileField(required=False)
 
 

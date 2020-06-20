@@ -37,6 +37,34 @@ class CartListView(generic.TemplateView):
         #             cart.remove(item.product)
 
 
+class CartSucessView(generic.TemplateView):
+    template_name = 'orders/cart_sucess_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['cart'] = Cart(self.request)
+        return context
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.GET.get('remove_from_cart'):
+            self.remove_from_cart(request)
+        return super().dispatch(request, *args, **kwargs)
+
+    def remove_from_cart(self, request, **kwargs):
+        research = Research.objects.get(slug=self.request.GET.get('remove_from_cart'))
+        cart = Cart(self.request)
+        cart.remove(research)
+        # if self.request.user.is_authenticated:
+        #     cart = Cart.objects.get(client_id=self.request.user.id)
+        #     CartItem.objects.get(cart=cart, research=research).delete()
+        # else:
+        #     cart = Cart(self.request)
+        #     for item in cart:
+        #         if item.get_product().research == research:
+        #             cart.remove(item.product)
+
+
 class CartPurchaseView(MultiFormView):
     form_classes = {
         'entity_form': EntityForm,
@@ -133,7 +161,7 @@ class CartPurchaseView(MultiFormView):
         return initial
 
     def get_success_url(self):
-        return reverse('orders:cart')
+        return reverse('orders:cart_sucess')
 
     def forms_valid(self, forms):
         client = Client.objects.get(user=self.request.user) if self.request.user.is_authenticated else None
