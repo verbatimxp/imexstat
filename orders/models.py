@@ -27,7 +27,7 @@ class Order(models.Model):
     legal_adress = models.CharField(max_length=100, blank=True, verbose_name='Юридический адрес')
     INN = models.IntegerField(blank=True, null=True, verbose_name='ИНН')
     KPP = models.IntegerField(blank=True, null=True, verbose_name='КПП')
-    date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания' )
     paid = models.BooleanField(verbose_name='Оплачен', default=False)
 
     def save(self, *args, **kwargs):

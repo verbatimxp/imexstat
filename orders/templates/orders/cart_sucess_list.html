@@ -12,7 +12,10 @@
                 <div class="col-6">
                     <img src="http://otherspace.ru/img/galka.png" width="100px" style="margin-top: -4%">
                 </div>
-                            <a href="{% url 'research:list' %}" class="header__top-login" style="margin-top: 5%">Перейти к списку продуктов</a>
+            <div style="width: 100%; margin-left: 2%"><h6> <b>Дата оформления</b> - {{ date_order.date }}</h6></div>
+<div style="margin-top: 5%"> <a href="{% url 'research:list' %}" class="header__top-login" >Перейти к списку продуктов</a></div>
+
+
 
 			</div>
 		</div>

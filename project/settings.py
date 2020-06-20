@@ -116,7 +116,7 @@ class Base(Configuration):
 
     LANGUAGE_CODE = 'ru-ru'
 
-    TIME_ZONE = 'UTC'
+    TIME_ZONE = 'Europe/Moscow'
 
     USE_I18N = True
 
@@ -275,7 +275,7 @@ class Prod(Base):
     #        'django': {
     #            'handlers': ['file'],
     #            'level': 'DEBUG',
-    #            'propagate': True,
+    #            'propagate': True
     #        },
     #        'django.request': {
     #            'handlers': ['mail_admins'],

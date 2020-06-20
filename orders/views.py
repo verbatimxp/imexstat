@@ -44,6 +44,7 @@ class CartSucessView(generic.TemplateView):
         context = super().get_context_data(**kwargs)
 
         context['cart'] = Cart(self.request)
+        context['date_order'] = Order.objects.all().last()
         return context
 
     def dispatch(self, request, *args, **kwargs):
